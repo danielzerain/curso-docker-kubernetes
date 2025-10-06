@@ -1,0 +1,48 @@
+# =============================
+# Archivos y carpetas de Gradle
+# =============================
+.gradle/
+build/
+out/
+bin/
+
+
+!gradle/wrapper/gradle-wrapper.jar
+.gradle/
+.gradle-cache/
+.gradle-build/
+
+
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+
+# =============================
+# Archivos del sistema
+# =============================
+.DS_Store
+Thumbs.db
+*.log
+
+# =============================
+# Control de versiones
+# =============================
+.git/
+.gitignore
+
+# =============================
+# Archivos temporales
+# =============================
+*.tmp
+*.bak
+*.old
+
+# =============================
+# Docker
+# =============================
+Dockerfile
+docker-compose.yml
+*.env
