@@ -29,12 +29,8 @@ services:
     restart: always
     ports:
       - "8000:8000"
-    environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: tienda_hardware
-      DB_USER: postgres
-      DB_PASSWORD: postgres123
+    env_file:
+      - .env    
     depends_on:
       db:
         condition: service_healthy
