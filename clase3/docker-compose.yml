@@ -41,7 +41,7 @@ services:
 
   frontend:
     image: nginx:alpine
-    container_name: tienda_hardware_frontend
+    container_name: tienda_frontend
     restart: always
     ports:
       - "80:80"
