@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Hardware - PC Components - Tarea 3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0e1636 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #020f46;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        select, button {
+            padding: 10px 20px;
+            border: 2px solid #2618a0;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        select {
+            background: white;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .producto-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .producto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .producto-imagen {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        .producto-info {
+            padding: 20px;
+        }
+
+        .producto-nombre {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .producto-categoria {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .producto-marca {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .producto-precio {
+            font-size: 1.8em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .producto-stock {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .producto-stock.bajo {
+            color: #e74c3c;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            margin: 50px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            color: white;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detalle-imagen {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .detalle-info {
+            line-height: 1.8;
+        }
+
+        .detalle-info h3 {
+            color: #a2a8c2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Tienda Curso Docker-Kubernetes</h1>
+            <p class="subtitle">Tarea 3</p>
+        </header>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="categoriaFilter">Filtrar por categoría:</label>
+                <select id="categoriaFilter">
+                    <option value="">Todas las categorías</option>
+                </select>
+                <button onclick="cargarProductos()">Aplicar filtro</button>
+                <button onclick="resetearFiltros()">Limpiar</button>
+            </div>
+        </div>
+
+        <div id="productosContainer" class="productos-grid"></div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitulo"></h2>
+                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost' && window.location.port === ''
+            ? '/api'  
+            : 'http://localhost:8000/api'; 
+
+        async function cargarCategorias() {
+            try {
+                const response = await fetch(`${API_URL}/categorias`);
+                const data = await response.json();
+                const select = document.getElementById('categoriaFilter');
+                
+                data.categorias.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar categorías:', error);
+            }
+        }
+
+        async function cargarProductos() {
+            const container = document.getElementById('productosContainer');
+            container.innerHTML = '<div class="loading">Cargando productos...</div>';
+
+            try {
+                const categoria = document.getElementById('categoriaFilter').value;
+                const url = categoria ? `${API_URL}/productos?categoria=${encodeURIComponent(categoria)}` : `${API_URL}/productos`;
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Error al cargar productos');
+                
+                const productos = await response.json();
+                
+                if (productos.length === 0) {
+                    container.innerHTML = '<div class="loading">No se encontraron productos</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                productos.forEach(producto => {
+                    const card = crearTarjetaProducto(producto);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                container.innerHTML = `<div class="error">Error al cargar productos: ${error.message}</div>`;
+                console.error('Error:', error);
+            }
+        }
+
+        function crearTarjetaProducto(producto) {
+            const card = document.createElement('div');
+            card.className = 'producto-card';
+            card.onclick = () => mostrarDetalle(producto.id);
+
+            const stockClass = producto.stock < 10 ? 'bajo' : '';
+            const stockText = producto.stock > 0 ? `${producto.stock} en stock` : 'Sin stock';
+
+            card.innerHTML = `
+                <div class="producto-imagen">💻</div>
+                <div class="producto-info">
+                    <span class="producto-categoria">${producto.categoria}</span>
+                    <div class="producto-nombre">${producto.nombre}</div>
+                    <div class="producto-marca">Marca: ${producto.marca}</div>
+                    <div class="producto-precio">Bs.${producto.precio.toFixed(2)}</div>
+                    <div class="producto-stock ${stockClass}">${stockText}</div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        async function mostrarDetalle(productoId) {
+            const modal = document.getElementById('modal');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalBody.innerHTML = '<div class="loading">Cargando detalles...</div>';
+            modal.style.display = 'block';
+
+            try {
+                const response = await fetch(`${API_URL}/productos/${productoId}`);
+                if (!response.ok) throw new Error('Producto no encontrado');
+                
+                const producto = await response.json();
+                
+                document.getElementById('modalTitulo').textContent = producto.nombre;
+                
+                const stockClass = producto.stock < 10 ? 'bajo' : '';
+                const stockText = producto.stock > 0 ? `${producto.stock} unidades disponibles` : 'Sin stock';
+
+                modalBody.innerHTML = `
+                    <div class="detalle-imagen">💻</div>
+                    <div class="detalle-info">
+                        <p><strong>Categoría:</strong> ${producto.categoria}</p>
+                        <p><strong>Marca:</strong> ${producto.marca}</p>
+                        <p><strong>Precio:</strong> <span style="font-size: 1.5em; color: #667eea; font-weight: bold;">Bs.${producto.precio.toFixed(2)}</span></p>
+                        <p><strong>Stock:</strong> <span class="producto-stock ${stockClass}">${stockText}</span></p>
+                        
+                        <h3>Descripción</h3>
+                        <p>${producto.descripcion || 'No hay descripción disponible'}</p>
+                        
+                        <h3>Información adicional</h3>
+                        <p><strong>ID del producto:</strong> ${producto.id}</p>
+                    </div>
+                `;
+            } catch (error) {
+                modalBody.innerHTML = `<div class="error">Error al cargar el detalle: ${error.message}</div>`;
+                console.error('Error:', error);
+            }
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function resetearFiltros() {
+            document.getElementById('categoriaFilter').value = '';
+            cargarProductos();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                cerrarModal();
+            }
+        }
+        cargarCategorias();
+        cargarProductos();
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+services:
+
+  db:
+      image: postgres:15-alpine
+      container_name: tienda_db
+      restart: always
+      environment:
+        POSTGRES_DB: tienda_hardware
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres123
+      ports:
+        - "5432:5432"
+      volumes:
+        - db-data:/var/lib/postgresql/data
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      networks:
+        - app-network
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U postgres"]
+        interval: 20s
+        timeout: 10s
+        retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tienda_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: tienda_hardware
+      DB_USER: postgres
+      DB_PASSWORD: postgres123
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+    volumes:
+      - ./app/main.py:/app/main.py
+
+  frontend:
+    image: nginx:alpine
+    container_name: tienda_hardware_frontend
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./html/index.html:/usr/share/nginx/html/index.html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
