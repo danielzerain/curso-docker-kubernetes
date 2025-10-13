@@ -16,6 +16,7 @@ Thumbs.db
 
 lib/python3.12/site-packages*
 __pycache__/
+__pycache__
 # Ignorar cualquier entorno virtual
 venv/
 */venv/

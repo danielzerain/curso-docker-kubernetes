@@ -69,6 +69,7 @@ INSERT INTO productos (nombre, categoria, precio, stock, marca, descripcion, ima
 
 CREATE INDEX idx_categoria ON productos(categoria);
 CREATE INDEX idx_marca ON productos(marca);
+<<<<<<< HEAD
 CREATE INDEX idx_precio ON productos(precio);
 
 
@@ -94,3 +95,6 @@ CREATE INDEX IF NOT EXISTS idx_pedidos_fecha ON pedidos(fecha DESC);
 CREATE INDEX IF NOT EXISTS idx_pedidos_estado ON pedidos(estado);
 CREATE INDEX IF NOT EXISTS idx_pedido_items_pedido ON pedido_items(pedido_id);
 CREATE INDEX IF NOT EXISTS idx_pedido_items_producto ON pedido_items(producto_id);
+=======
+CREATE INDEX idx_precio ON productos(precio);
+>>>>>>> 08de200b8dc6dc88ca63825ba26d41f9df339881
