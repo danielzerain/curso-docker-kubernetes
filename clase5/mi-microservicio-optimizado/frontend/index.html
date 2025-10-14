@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Hardware - PC Components - Tarea 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0e1636 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #020f46;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        select, button, input, textarea {
+            padding: 10px 20px;
+            border: 2px solid #2618a0;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        input, textarea {
+            border: 2px solid #ddd;
+            cursor: text;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        select {
+            background: white;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .producto-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .producto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .producto-imagen {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        .producto-info {
+            padding: 20px;
+        }
+
+        .producto-nombre {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .producto-categoria {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .producto-marca {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .producto-precio {
+            font-size: 1.8em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .producto-stock {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .producto-stock.bajo {
+            color: #e74c3c;
+        }
+
+        .btn-agregar-carrito {
+            background: #e74c3c;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-agregar-carrito:hover {
+            background: #c0392b;
+        }
+
+        .carrito-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .carrito-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(231, 76, 60, 0.6);
+        }
+
+        .carrito-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #fff;
+            color: #e74c3c;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5em;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            margin: 50px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            color: white;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detalle-imagen {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .detalle-info {
+            line-height: 1.8;
+        }
+
+        .detalle-info h3 {
+            color: #667eea;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group label .required {
+            color: #e74c3c;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-nuevo {
+            background: #27ae60;
+            margin-left: auto;
+        }
+
+        .btn-nuevo:hover {
+            background: #229954;
+        }
+
+        .carrito-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .carrito-item-info {
+            flex: 1;
+        }
+
+        .carrito-item-nombre {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .carrito-item-precio {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .carrito-item-cantidad {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .cantidad-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .cantidad-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-eliminar {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .carrito-vacio {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .carrito-total {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 2px solid #667eea;
+            margin-top: 20px;
+        }
+
+        .carrito-total-monto {
+            font-size: 1.8em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .btn-finalizar {
+            width: 100%;
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+
+        .btn-finalizar:hover {
+            background: #229954;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .carrito-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5em;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🖥️ Tienda Curso Docker-Kubernetes</h1>
+            <p class="subtitle">Tarea 4</p>
+        </header>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="categoriaFilter">Filtrar por categoría:</label>
+                <select id="categoriaFilter">
+                    <option value="">Todas las categorías</option>
+                </select>
+                <button onclick="cargarProductos()">Aplicar filtro</button>
+                <button onclick="resetearFiltros()">Limpiar</button>
+                <button class="btn-nuevo" onclick="mostrarFormularioNuevo()">➕ Nuevo Producto</button>
+            </div>
+        </div>
+
+        <div id="productosContainer" class="productos-grid"></div>
+    </div>
+
+    <button class="carrito-btn" onclick="mostrarCarrito()">
+        🛒
+        <span class="carrito-badge" id="carritoCount">0</span>
+    </button>
+
+    <!-- Modal Detalle -->
+    <div id="modalDetalle" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitulo"></h2>
+                <button class="modal-close" onclick="cerrarModal('modalDetalle')">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Modal Registro -->
+    <div id="modalRegistro" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ Registrar Nuevo Producto</h2>
+                <button class="modal-close" onclick="cerrarModal('modalRegistro')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formProducto" onsubmit="registrarProducto(event)">
+                    <div class="form-group">
+                        <label for="nombre">Nombre del producto <span class="required">*</span></label>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Ej: RTX 4090">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="categoria">Categoría <span class="required">*</span></label>
+                            <select id="categoria" name="categoria" required>
+                                <option value="">Seleccione una categoría</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="marca">Marca <span class="required">*</span></label>
+                            <input type="text" id="marca" name="marca" required placeholder="Ej: NVIDIA">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="precio">Precio (Bs.) <span class="required">*</span></label>
+                            <input type="number" id="precio" name="precio" step="0.01" min="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="stock">Stock <span class="required">*</span></label>
+                            <input type="number" id="stock" name="stock" min="0" required placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" placeholder="Descripción del producto (opcional)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagen_url">URL de la imagen</label>
+                        <input type="url" id="imagen_url" name="imagen_url" placeholder="https://ejemplo.com/imagen.jpg (opcional)">
+                    </div>
+                    <div id="mensajeForm"></div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                        <button type="button" onclick="cerrarModal('modalRegistro')" style="background: #95a5a6;">Cancelar</button>
+                        <button type="submit" class="btn-nuevo">Guardar Producto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Carrito -->
+    <div id="modalCarrito" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🛒 Carrito de Compras</h2>
+                <button class="modal-close" onclick="cerrarModal('modalCarrito')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="carritoItems"></div>
+                <div id="carritoTotal" class="carrito-total" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <span style="font-size: 1.2em; font-weight: 600;">Total:</span>
+                        <span class="carrito-total-monto" id="totalMonto">Bs. 0.00</span>
+                    </div>
+                    <button class="btn-finalizar" onclick="mostrarFormularioPedido()">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Finalizar Pedido -->
+    <div id="modalPedido" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📦 Finalizar Pedido</h2>
+                <button class="modal-close" onclick="cerrarModal('modalPedido')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formPedido" onsubmit="finalizarPedido(event)">
+                    <div class="form-group">
+                        <label for="clienteNombre">Nombre completo <span class="required">*</span></label>
+                        <input type="text" id="clienteNombre" required placeholder="Ej: Juan Pérez">
+                    </div>
+                    <div class="form-group">
+                        <label for="clienteEmail">Email <span class="required">*</span></label>
+                        <input type="email" id="clienteEmail" required placeholder="Ej: juan@email.com">
+                    </div>
+                    <div class="carrito-total">
+                        <h3 style="margin-bottom: 15px;">Resumen del Pedido:</h3>
+                        <div id="resumenPedido"></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 2px solid #667eea;">
+                            <span style="font-size: 1.2em; font-weight: 600;">Total a Pagar:</span>
+                            <span class="carrito-total-monto" id="totalPedido">Bs. 0.00</span>
+                        </div>
+                    </div>
+                    <div id="mensajePedido"></div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                        <button type="button" onclick="cerrarModal('modalPedido')" style="background: #95a5a6;">Cancelar</button>
+                        <button type="submit" class="btn-finalizar">Confirmar Pedido</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.hostname === 'localhost' && window.location.port === ''
+            ? '/api' : 'http://localhost/api';
+
+        const API_CARRITO_URL = window.location.hostname === 'localhost' && window.location.port === ''
+            ? '/cart' : 'http://localhost/cart';
+
+        let carrito = [];
+        let productosCache = {};
+
+        function cargarCarritoLocal() {
+            const carritoGuardado = localStorage.getItem('carrito');
+            if (carritoGuardado) {
+                carrito = JSON.parse(carritoGuardado);
+                actualizarBadgeCarrito();
+            }
+        }
+
+        function guardarCarritoLocal() {
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            actualizarBadgeCarrito();
+        }
+
+        function actualizarBadgeCarrito() {
+            const count = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            document.getElementById('carritoCount').textContent = count;
+        }
+
+        function agregarAlCarrito(producto) {
+            const itemExistente = carrito.find(item => item.id === producto.id);
+            
+            if (itemExistente) {
+                if (itemExistente.cantidad < producto.stock) {
+                    itemExistente.cantidad++;
+                } else {
+                    alert('No hay más stock disponible');
+                    return;
+                }
+            } else {
+                carrito.push({
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    cantidad: 1,
+                    stock: producto.stock
+                });
+            }
+            
+            guardarCarritoLocal();
+            alert(`✓ ${producto.nombre} agregado al carrito`);
+        }
+
+        function mostrarCarrito() {
+            const modal = document.getElementById('modalCarrito');
+            const itemsContainer = document.getElementById('carritoItems');
+            const totalDiv = document.getElementById('carritoTotal');
+            
+            if (carrito.length === 0) {
+                itemsContainer.innerHTML = '<div class="carrito-vacio">🛒 Tu carrito está vacío</div>';
+                totalDiv.style.display = 'none';
+            } else {
+                itemsContainer.innerHTML = carrito.map(item => `
+                    <div class="carrito-item">
+                        <div class="carrito-item-info">
+                            <div class="carrito-item-nombre">${item.nombre}</div>
+                            <div class="carrito-item-precio">Bs. ${item.precio.toFixed(2)}</div>
+                            <div class="carrito-item-cantidad">
+                                <button class="cantidad-btn" onclick="cambiarCantidad(${item.id}, -1)">-</button>
+                                <span>${item.cantidad}</span>
+                                <button class="cantidad-btn" onclick="cambiarCantidad(${item.id}, 1)">+</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold; color: #667eea; margin-bottom: 10px;">
+                                Bs. ${(item.precio * item.cantidad).toFixed(2)}
+                            </div>
+                            <button class="btn-eliminar" onclick="eliminarDelCarrito(${item.id})">Eliminar</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+                document.getElementById('totalMonto').textContent = `Bs. ${total.toFixed(2)}`;
+                totalDiv.style.display = 'block';
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function cambiarCantidad(productoId, cambio) {
+            const item = carrito.find(i => i.id === productoId);
+            if (!item) return;
+            
+            const nuevaCantidad = item.cantidad + cambio;
+            
+            if (nuevaCantidad <= 0) {
+                eliminarDelCarrito(productoId);
+                return;
+            }
+            
+            if (nuevaCantidad > item.stock) {
+                alert('No hay suficiente stock disponible');
+                return;
+            }
+            
+            item.cantidad = nuevaCantidad;
+            guardarCarritoLocal();
+            mostrarCarrito();
+        }
+
+        function eliminarDelCarrito(productoId) {
+            carrito = carrito.filter(item => item.id !== productoId);
+            guardarCarritoLocal();
+            mostrarCarrito();
+        }
+
+        function mostrarFormularioPedido() {
+            cerrarModal('modalCarrito');
+            
+            const resumen = document.getElementById('resumenPedido');
+            resumen.innerHTML = carrito.map(item => `
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
+                    <span>${item.nombre} x ${item.cantidad}</span>
+                    <span style="font-weight: bold;">Bs. ${(item.precio * item.cantidad).toFixed(2)}</span>
+                </div>
+            `).join('');
+            
+            const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            document.getElementById('totalPedido').textContent = `Bs. ${total.toFixed(2)}`;
+            
+            document.getElementById('modalPedido').style.display = 'block';
+        }
+
+        async function finalizarPedido(event) {
+            event.preventDefault();
+            
+            const mensajeDiv = document.getElementById('mensajePedido');
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            
+            mensajeDiv.innerHTML = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Procesando...';
+
+            const pedidoData = {
+                cliente_nombre: document.getElementById('clienteNombre').value.trim(),
+                cliente_email: document.getElementById('clienteEmail').value.trim(),
+                items: carrito.map(item => ({
+                    producto_id: item.id,
+                    cantidad: item.cantidad
+                }))
+            };
+
+            try {
+                const response = await fetch(`${API_CARRITO_URL}/pedidos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(pedidoData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Error al crear el pedido');
+                }
+
+                mensajeDiv.innerHTML = `
+                    <div class="success">
+                        ✓ ${data.message}<br>
+                        Pedido ID: ${data.pedido_id}<br>
+                        Total: Bs. ${data.total.toFixed(2)}
+                    </div>
+                `;
+                
+                carrito = [];
+                guardarCarritoLocal();
+                
+                setTimeout(() => {
+                    cerrarModal('modalPedido');
+                    cargarProductos();
+                }, 2500);
+
+            } catch (error) {
+                mensajeDiv.innerHTML = `<div class="error">✗ ${error.message}</div>`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirmar Pedido';
+            }
+        }
+
+        async function cargarCategorias() {
+            try {
+                const response = await fetch(`${API_URL}/categorias`);
+                const data = await response.json();
+                
+                const selectFiltro = document.getElementById('categoriaFilter');
+                data.categorias.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    selectFiltro.appendChild(option);
+                });
+
+                const selectForm = document.getElementById('categoria');
+                data.categorias.forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat;
+                    selectForm.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error al cargar categorías:', error);
+            }
+        }
+
+        async function cargarProductos() {
+            const container = document.getElementById('productosContainer');
+            container.innerHTML = '<div class="loading">Cargando productos...</div>';
+
+            try {
+                const categoria = document.getElementById('categoriaFilter').value;
+                const url = categoria ? `${API_URL}/productos?categoria=${encodeURIComponent(categoria)}` : `${API_URL}/productos`;
+                
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Error al cargar productos');
+                
+                const productos = await response.json();
+                
+                productos.forEach(p => productosCache[p.id] = p);
+                
+                if (productos.length === 0) {
+                    container.innerHTML = '<div class="loading">No se encontraron productos</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                productos.forEach(producto => {
+                    const card = crearTarjetaProducto(producto);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                container.innerHTML = `<div class="error">Error al cargar productos: ${error.message}</div>`;
+            }
+        }
+
+        function crearTarjetaProducto(producto) {
+            const card = document.createElement('div');
+            card.className = 'producto-card';
+
+            const stockClass = producto.stock < 10 ? 'bajo' : '';
+            const stockText = producto.stock > 0 ? `${producto.stock} en stock` : 'Sin stock';
+
+            card.innerHTML = `
+                <div class="producto-imagen">💻</div>
+                <div class="producto-info">
+                    <span class="producto-categoria">${producto.categoria}</span>
+                    <div class="producto-nombre" onclick="mostrarDetalle(${producto.id})">${producto.nombre}</div>
+                    <div class="producto-marca">Marca: ${producto.marca}</div>
+                    <div class="producto-precio">Bs.${producto.precio.toFixed(2)}</div>
+                    <div class="producto-stock ${stockClass}">${stockText}</div>
+                    <button class="btn-agregar-carrito" onclick="event.stopPropagation(); agregarAlCarrito(${JSON.stringify(producto).replace(/"/g, '&quot;')})" ${producto.stock === 0 ? 'disabled' : ''}>
+                        ${producto.stock === 0 ? '❌ Sin Stock' : '🛒 Agregar al Carrito'}
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        async function mostrarDetalle(productoId) {
+            const modal = document.getElementById('modalDetalle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalBody.innerHTML = '<div class="loading">Cargando detalles...</div>';
+            modal.style.display = 'block';
+
+            try {
+                const response = await fetch(`${API_URL}/productos/${productoId}`);
+                if (!response.ok) throw new Error('Producto no encontrado');
+                
+                const producto = await response.json();
+                
+                document.getElementById('modalTitulo').textContent = producto.nombre;
+                
+                const stockClass = producto.stock < 10 ? 'bajo' : '';
+                const stockText = producto.stock > 0 ? `${producto.stock} unidades disponibles` : 'Sin stock';
+
+                modalBody.innerHTML = `
+                    <div class="detalle-imagen">💻</div>
+                    <div class="detalle-info">
+                        <p><strong>Categoría:</strong> ${producto.categoria}</p>
+                        <p><strong>Marca:</strong> ${producto.marca}</p>
+                        <p><strong>Precio:</strong> <span style="font-size: 1.5em; color: #667eea; font-weight: bold;">Bs.${producto.precio.toFixed(2)}</span></p>
+                        <p><strong>Stock:</strong> <span class="producto-stock ${stockClass}">${stockText}</span></p>
+                        
+                        <h3>Descripción</h3>
+                        <p>${producto.descripcion || 'No hay descripción disponible'}</p>
+                        
+                        <h3>Información adicional</h3>
+                        <p><strong>ID del producto:</strong> ${producto.id}</p>
+                        
+                        <button class="btn-agregar-carrito" onclick="agregarAlCarrito(${JSON.stringify(producto).replace(/"/g, '&quot;')}); cerrarModal('modalDetalle')" ${producto.stock === 0 ? 'disabled' : ''}>
+                            ${producto.stock === 0 ? '❌ Sin Stock' : '🛒 Agregar al Carrito'}
+                        </button>
+                    </div>
+                `;
+            } catch (error) {
+                modalBody.innerHTML = `<div class="error">Error al cargar el detalle: ${error.message}</div>`;
+            }
+        }
+
+        function mostrarFormularioNuevo() {
+            document.getElementById('formProducto').reset();
+            document.getElementById('mensajeForm').innerHTML = '';
+            document.getElementById('modalRegistro').style.display = 'block';
+        }
+
+        async function registrarProducto(event) {
+            event.preventDefault();
+            
+            const mensajeDiv = document.getElementById('mensajeForm');
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            
+            mensajeDiv.innerHTML = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Guardando...';
+
+            const formData = {
+                nombre: document.getElementById('nombre').value.trim(),
+                categoria: document.getElementById('categoria').value,
+                marca: document.getElementById('marca').value.trim(),
+                precio: parseFloat(document.getElementById('precio').value),
+                stock: parseInt(document.getElementById('stock').value),
+                descripcion: document.getElementById('descripcion').value.trim() || null,
+                imagen_url: document.getElementById('imagen_url').value.trim() || null
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/productos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Error al registrar el producto');
+                }
+
+                mensajeDiv.innerHTML = `<div class="success">✓ ${data.message}. ID: ${data.producto_id}</div>`;
+                
+                setTimeout(() => {
+                    cerrarModal('modalRegistro');
+                    cargarProductos();
+                    cargarCategorias();
+                }, 1500);
+
+            } catch (error) {
+                mensajeDiv.innerHTML = `<div class="error">✗ ${error.message}</div>`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Guardar Producto';
+            }
+        }
+
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function resetearFiltros() {
+            document.getElementById('categoriaFilter').value = '';
+            cargarProductos();
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Inicializar
+        cargarCarritoLocal();
+        cargarCategorias();
+        cargarProductos();
+    </script>
+</body>
+</html>
