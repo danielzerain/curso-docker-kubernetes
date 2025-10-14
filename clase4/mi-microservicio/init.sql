@@ -17,6 +17,36 @@ CREATE TABLE IF NOT EXISTS productos (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Crear tabla de pedidos
+CREATE TABLE IF NOT EXISTS pedidos (
+    id SERIAL PRIMARY KEY,
+    cliente_nombre VARCHAR(255) NOT NULL,
+    cliente_email VARCHAR(255) NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    estado VARCHAR(50) DEFAULT 'pendiente',
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS pedido_items (
+    id SERIAL PRIMARY KEY,
+    pedido_id INTEGER NOT NULL REFERENCES pedidos(id) ON DELETE CASCADE,
+    producto_id INTEGER NOT NULL REFERENCES productos(id),
+    cantidad INTEGER NOT NULL,
+    precio_unitario DECIMAL(10, 2) NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL
+);
+
+CREATE INDEX idx_categoria ON productos(categoria);
+CREATE INDEX idx_marca ON productos(marca);
+CREATE INDEX idx_precio ON productos(precio);
+
+CREATE INDEX IF NOT EXISTS idx_pedidos_fecha ON pedidos(fecha DESC);
+CREATE INDEX IF NOT EXISTS idx_pedidos_estado ON pedidos(estado);
+CREATE INDEX IF NOT EXISTS idx_pedido_items_pedido ON pedido_items(pedido_id);
+CREATE INDEX IF NOT EXISTS idx_pedido_items_producto ON pedido_items(producto_id);
+
+
+
 -- Insertar datos de ejemplo
 INSERT INTO productos (nombre, categoria, precio, stock, marca, descripcion, imagen_url) VALUES
 ('Procesador Intel Core i9-14900K', 'Procesadores', 589.99, 15, 'Intel', 
@@ -67,34 +97,3 @@ INSERT INTO productos (nombre, categoria, precio, stock, marca, descripcion, ima
  'Mid-tower ATX, panel frontal de malla para flujo de aire óptimo. Incluye 3 ventiladores RGB, soporte para refrigeración líquida 360mm.', 
  'https://via.placeholder.com/300x200?text=NZXT+H7');
 
-CREATE INDEX idx_categoria ON productos(categoria);
-CREATE INDEX idx_marca ON productos(marca);
-<<<<<<< HEAD
-CREATE INDEX idx_precio ON productos(precio);
-
-
-CREATE TABLE IF NOT EXISTS pedidos (
-    id SERIAL PRIMARY KEY,
-    cliente_nombre VARCHAR(255) NOT NULL,
-    cliente_email VARCHAR(255) NOT NULL,
-    total DECIMAL(10, 2) NOT NULL,
-    estado VARCHAR(50) DEFAULT 'pendiente',
-    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS pedido_items (
-    id SERIAL PRIMARY KEY,
-    pedido_id INTEGER NOT NULL REFERENCES pedidos(id) ON DELETE CASCADE,
-    producto_id INTEGER NOT NULL REFERENCES productos(id),
-    cantidad INTEGER NOT NULL,
-    precio_unitario DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2) NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_pedidos_fecha ON pedidos(fecha DESC);
-CREATE INDEX IF NOT EXISTS idx_pedidos_estado ON pedidos(estado);
-CREATE INDEX IF NOT EXISTS idx_pedido_items_pedido ON pedido_items(pedido_id);
-CREATE INDEX IF NOT EXISTS idx_pedido_items_producto ON pedido_items(producto_id);
-=======
-CREATE INDEX idx_precio ON productos(precio);
->>>>>>> 08de200b8dc6dc88ca63825ba26d41f9df339881
