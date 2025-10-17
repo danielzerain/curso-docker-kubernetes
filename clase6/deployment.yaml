@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  labels:
+    app: webapp
+    env: labt6
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+        env: labt6
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:stable-alpine3.21-perl
+        ports:
+        - containerPort: 80
