@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hw-clase7
+  labels:
+    proyecto: homework
+    clase: clase7
